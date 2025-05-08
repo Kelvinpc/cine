@@ -6,10 +6,11 @@ export const getPeliculas= async(req,res) => {
 }
 
 export const getPeliculasById= async(req,res) => {
-  const [rows] = await pool.query("SELECT * FROM peliculas WHERE id = ?", [req,URLSearchParams.id])
+  const [rows] = await pool.query("SELECT * FROM peliculas WHERE id = ?", [req.params.id])
   if(rows.length<= 0)return res.status(400).json({
     message: 'No existe pelicula con este ID'
   })
+
   res.json(rows)
 }
 
@@ -17,7 +18,7 @@ export const createPeliculas= async(req,res) => {
 
   const {titulo,duracionmin, clasificacion,lanzamiento} = req.body
 
-  const [rows]=query("INSERT INTO peliculas FROM peliculas (titulo,duracionmin,clasificacion,lanzamiento)VALUES(?,?,?,?)",
+  const [rows]= await pool.query("INSERT INTO peliculas (titulo,duracionmin,clasificacion,lanzamiento)VALUES(?,?,?,?)",
 
   [titulo, duracionmin,clasificacion , lanzamiento])
   res.send({
@@ -26,9 +27,7 @@ export const createPeliculas= async(req,res) => {
     duracionmin,
     clasificacion,
     lanzamiento
-
   })
- 
 }
 
 export const updatePeliculas= async(req,res) => {
